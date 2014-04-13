@@ -34,6 +34,6 @@ Examples of usage !ZgeOuya IAP in ZGE can be found at the [http://googledrive.co
  # Compile the APK again as in step 1.
  # Deploy the APK file to your OUYA device and install it. You can use, for instance, USB transfer from PC to OUYA and !FilePwn OUYA application for installing the application at the device.
 
-_Note 1: The steps from 1 to 5 are required only when the application is built the first time. After that, a single compilation produces the correct APK._
+_Note 1: Seps from 1 to 5 are required only when the application is built the first time. After that, a single compilation produces the correct APK._
 
-_Note 2: Use the steps 4 and 5 also in the case when updating to a newer version of the !ZgeOuya library._
+_Note 2: Use steps 4 and 5 also in the case when updating to a newer version of the !ZgeOuya library._
