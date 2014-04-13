@@ -1,0 +1,52 @@
+<?xml version="1.0" encoding="UTF-8" standalone="yes" ?>
+<CodeBlocks_project_file>
+	<FileVersion major="1" minor="6" />
+	<Project>
+		<Option title="ZgeOuya" />
+		<Option pch_mode="2" />
+		<Option compiler="gcc" />
+		<Build>
+			<Target title="Release">
+				<Option platforms="" />
+				<Option output="bin/Release/ZgeOuya" prefix_auto="1" extension_auto="1" />
+				<Option working_dir="" />
+				<Option object_output="obj/Release/" />
+				<Option type="2" />
+				<Option compiler="gcc" />
+				<Option projectIncludeDirsRelation="2" />
+				<Compiler>
+					<Add option="-O2" />
+					<Add directory="D:/android-ndk-r8d/platforms/android-14/arch-arm/usr/include" />
+					<Add directory="C:/Program Files/android-ndk-r9d/sources/cxx-stl/stlport/stlport" />
+				</Compiler>
+				<Linker>
+					<Add option="-s" />
+				</Linker>
+			</Target>
+		</Build>
+		<Compiler>
+			<Add option="-Wall" />
+			<Add directory="D:/android-ndk-r8d/platforms/android-14/arch-arm/usr/include" />
+		</Compiler>
+		<Unit filename="ZgeOuya.cpp" />
+		<Unit filename="jni/Android.mk" />
+		<Unit filename="jni/Application.mk" />
+		<Extensions>
+			<code_completion>
+				<search_path add="C:\Program Files\android-ndk-r9d\platforms\android-16\arch-arm\usr\include" />
+				<search_path add="C:\Program Files\android-ndk-r9d\sources\cxx-stl\stlport\stlport" />
+			</code_completion>
+			<envvars />
+			<debugger />
+			<DoxyBlocks>
+				<comment_style block="0" line="0" />
+				<doxyfile_project />
+				<doxyfile_build />
+				<doxyfile_warnings />
+				<doxyfile_output />
+				<doxyfile_dot />
+				<general />
+			</DoxyBlocks>
+		</Extensions>
+	</Project>
+</CodeBlocks_project_file>

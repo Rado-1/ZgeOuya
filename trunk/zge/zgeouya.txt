@@ -1,0 +1,106 @@
+/*
+  ZGAmeEditor adapter to the ZgeOuya Library.
+  The library provides the interface to the OUYA
+  In-App Purchasing (IAP) and Storage mechanisms.
+
+  Download Android shared library from
+  http://googledrive.com/host/0BxwfQ8la88ouc2t2TWJ1NUtCeUk/
+
+  Project home
+  http://code.google.com/p/zgeouya/
+
+  Copyright (c) 2014 Radovan Cervenka
+*/
+
+// Constants
+const int ouya_YES = 1;
+const int ouya_NO = 0;
+const int ouya_ERROR = -1;
+
+// Generic
+
+// Returns ouya_YES if running on OUYA; else ouya_NO
+int ouya_IsOuya() {}
+
+// In-App Purchasing (IAP)
+
+// Initializes IAP interface. Specify the developer id (UUID),
+// the application key (pointer to a byte array) and the key
+// length parameters. Their values can be obtained from the
+// OUYA developer Portal; http://devs.ouya.tv/developers
+// Returns ouya_YES is succeded, or ouya_ERROR if failed.
+int ouya_InitPurchasing(string developerId, xptr applicationKey,
+  int applicationKeyLen) {}
+
+// Stops the IAP interface.
+void ouya_StopPurchasing() {}
+
+// Requests the OUYA products. Products are specified as
+// a pointer to the string array. Each array item represents a
+// separate product identifier. The productNum parameter
+// determines number of requested products.
+void ouya_RequestProducts(xptr productIds, int productNum) {}
+
+// Returns ouya_YES if product request was successful and product
+// info is available, ouya_NO if the product request is
+// still in progress, or ouya_ERROR if the request failed.
+// In the case of failure the errorMsg parameter is set
+// to the error message.
+int ouya_IsProductRequestDone(ref string errorMsg) {}
+
+// Sets name, price and description for a product identified
+// by productId. Returns ouya_ERROR in the case of error; e.g.
+// the requested product information is not available.
+int ouya_GetProductInfo(string productId, ref string name,
+	ref string price, ref string description) {}
+
+// Requests purchasing of the specified product.
+void ouya_RequestPurchase(string productId) {}
+
+// Returns ouya_YES if the product has been purchased
+// successfully, ouya_NO if the purchase is in the progress, or
+// ouya_ERROR if the purchase failed. In the case of failure
+// the errorMsg parameter is set to the error message.
+int ouya_IsPurchaseRequestDone(string productId,
+	ref string errorMsg) {}
+
+// Clear the list of purchases. This is usually called after all
+// purchase requests finished.
+void ouya_ClearPurchases() {}
+
+// Requests receipts for all of the purchases that the current
+// gamer has made from a particular vendor.
+void ouya_RequestReceipts() {}
+
+// Returns ouya_YES if receipt request was successful and
+// receipts are available, ouya_NO if the receipt request is
+// still in progress, or ouya_ERROR if the request failed.
+// In the case of success the parameter numberOfReceipts gives
+// the number of obtained receipts. In the case of failure the
+// errorMsg parameter is set to the error message.
+int ouya_IsReceiptRequestDone(ref int numberOfReceipts,
+	ref string errorMsg) {}
+
+// Sets the product identifier of a receipt identified by id.
+// Returns ouya_ERROR if the receipt information is not
+// available.
+int ouya_GetReceiptInfo(int id, ref string productId) {}
+
+// Requests the current gamer's information.
+void ouya_RequestGamerInfo() {}
+
+// Returns ouya_YES if gamer information request was successful,
+// ouya_NO if the request is still in progress, or ouya_ERROR
+// if the request failed. In the case of success the parameters
+// username and uuid are set. In the case of failure the
+// errorMsg parameter is set to the error message.
+int ouya_IsGamerInfoRequestDone(ref string username,
+	ref string uuid, ref string errorMsg) {}
+
+// Storage
+
+// Stores game data.
+void ouya_PutGameData(string name, string value) {}
+
+// Gets a piece of previously stored game data.
+string ouya_GetGameData(string name) {}
