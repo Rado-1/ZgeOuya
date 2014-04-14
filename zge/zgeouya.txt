@@ -1,6 +1,6 @@
 /*
   ZGAmeEditor adapter to the ZgeOuya Library.
-  The library provides the interface to the OUYA
+  The library provides interface to the OUYA
   In-App Purchasing (IAP) and Storage mechanisms.
 
   Download Android shared library from
@@ -24,13 +24,11 @@ int ouya_IsOuya() {}
 
 // In-App Purchasing (IAP)
 
-// Initializes IAP interface. Specify the developer id (UUID),
-// the application key (pointer to a byte array) and the key
-// length parameters. Their values can be obtained from the
-// OUYA developer Portal; http://devs.ouya.tv/developers
+// Initializes IAP interface. The developer id (UUID) can
+// be obtained from the OUYA developer Portal;
+// http://devs.ouya.tv/developers
 // Returns ouya_YES is succeded, or ouya_ERROR if failed.
-int ouya_InitPurchasing(string developerId, xptr applicationKey,
-  int applicationKeyLen) {}
+int ouya_InitPurchasing(string developerId) {}
 
 // Stops the IAP interface.
 void ouya_StopPurchasing() {}

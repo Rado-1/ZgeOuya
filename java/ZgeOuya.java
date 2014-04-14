@@ -23,6 +23,7 @@ freely, subject to the following restrictions:
 
 package org.zgameeditor;
 
+import java.io.InputStream;
 import java.security.KeyFactory;
 import java.security.PublicKey;
 import java.security.SecureRandom;
@@ -49,6 +50,7 @@ import tv.ouya.console.api.Product;
 import tv.ouya.console.api.Purchasable;
 import tv.ouya.console.api.Receipt;
 import android.annotation.SuppressLint;
+import android.content.res.AssetManager;
 import android.os.Bundle;
 import android.util.Base64;
 import android.util.Log;
@@ -89,11 +91,19 @@ public class ZgeOuya {
 
   // In-App Purchasing
 
-  public static synchronized int initPurchasing(String developerId, byte[] applicationKey) {
+  public static synchronized int initPurchasing(String developerId) {
     facade.init(ZgeActivity.zgeActivity, developerId);
  
-    // create public key
+    // create a public key object from the key data file
     try {
+      // read the key.der file (downloaded from the developer portal)
+      AssetManager assets = ZgeActivity.zgeActivity.getAssets();
+      InputStream inputStream = assets.open("key.der", AssetManager.ACCESS_BUFFER);
+      byte[] applicationKey = new byte[inputStream.available()];
+      inputStream.read(applicationKey);
+      inputStream.close();
+
+      // create public key
       X509EncodedKeySpec keySpec = new X509EncodedKeySpec(applicationKey);
       KeyFactory keyFactory = KeyFactory.getInstance("RSA");
       mPublicKey = keyFactory.generatePublic(keySpec);

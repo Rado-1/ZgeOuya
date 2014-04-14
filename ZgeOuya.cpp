@@ -130,7 +130,7 @@ JNIEXPORT jint JNI_OnLoad(JavaVM* vm, void* reserved)
 		// set globals JNI variables
 		zgeOuyaCls = env->FindClass("org/zgameeditor/ZgeOuya");
 		isOuyaMethod = env->GetStaticMethodID(zgeOuyaCls, "isOuya", "()Z");
-		initPurchasingMethod = env->GetStaticMethodID(zgeOuyaCls, "initPurchasing", "(Ljava/lang/String;[B)I");
+		initPurchasingMethod = env->GetStaticMethodID(zgeOuyaCls, "initPurchasing", "(Ljava/lang/String;)I");
 		stopPurchasingMethod = env->GetStaticMethodID(zgeOuyaCls, "stopPurchasing", "()V");
 		requestProductsMethod = env->GetStaticMethodID(zgeOuyaCls, "requestProducts", "([Ljava/lang/String;)V");
 		requestPurchaseMethod = env->GetStaticMethodID(zgeOuyaCls, "requestPurchase", "(Ljava/lang/String;)V");
@@ -153,14 +153,11 @@ export bool ouya_IsOuya(){
 
 // In-App Purchasing (IAP)
 
-export int ouya_InitPurchasing(char* developerId, char *applicationKey, int applicationKeyLen){
+export int ouya_InitPurchasing(char* developerId){
 	LOG_DEBUG("ouya_InitPurchasing called");
 
-	jbyteArray key = env->NewByteArray(applicationKeyLen);
-	env->SetByteArrayRegion(key, 0, applicationKeyLen, (jbyte*) applicationKey);
-
 	return env->CallStaticIntMethod(zgeOuyaCls, initPurchasingMethod,
-							env->NewStringUTF(developerId), key);
+							env->NewStringUTF(developerId));
 }
 
 export void ouya_StopPurchasing(){
