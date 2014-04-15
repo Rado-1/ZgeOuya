@@ -33,25 +33,6 @@ int ouya_InitPurchasing(string developerId) {}
 // Stops the IAP interface.
 void ouya_StopPurchasing() {}
 
-// Requests the OUYA products. Products are specified as
-// a pointer to the string array. Each array item represents a
-// separate product identifier. The productNum parameter
-// determines number of requested products.
-void ouya_RequestProducts(xptr productIds, int productNum) {}
-
-// Returns ouya_YES if product request was successful and product
-// info is available, ouya_NO if the product request is
-// still in progress, or ouya_ERROR if the request failed.
-// In the case of failure the errorMsg parameter is set
-// to the error message.
-int ouya_IsProductRequestDone(ref string errorMsg) {}
-
-// Sets name, price and description for a product identified
-// by productId. Returns ouya_ERROR in the case of error; e.g.
-// the requested product information is not available.
-int ouya_GetProductInfo(string productId, ref string name,
-	ref string price, ref string description) {}
-
 // Requests purchasing of the specified product.
 void ouya_RequestPurchase(string productId) {}
 
