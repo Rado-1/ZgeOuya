@@ -1,0 +1,29 @@
+<?xml version="1.0" encoding="iso-8859-1" ?>
+<ZApplication Name="App" Comment="Application key loader; Created by Rado1" Caption="App Key Loader">
+  <OnLoaded>
+    <ZExpression Comment="Set array">
+      <Expression>
+<![CDATA[@FileAction(File: KeyFile, Action: 0);
+
+/*
+
+The APPLICATION_KEY array now containsint the application key.
+
+Copy/paste the array to your application and us in the ouya_Purchase()
+function.
+
+*/
+
+quit();]]>
+      </Expression>
+    </ZExpression>
+  </OnLoaded>
+  <Content>
+    <File Name="KeyFile" FileName="key.der" Encoding="1" TargetArray="APPLICATION_KEY"/>
+    <Array Name="APPLICATION_KEY" Type="4" Persistent="255">
+      <Values>
+<![CDATA[78DA636018EC000000A20001]]>
+      </Values>
+    </Array>
+  </Content>
+</ZApplication>

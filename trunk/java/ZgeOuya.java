@@ -69,10 +69,6 @@ public class ZgeOuya {
   static {
     System.loadLibrary("ZgeOuya");
   }
-  
-  private static native void NativeSetProductInfo(boolean success,
-      String productId, String name, String price, String description,
-      String errorMessage);
 
   private static native void NativeSetGamerInfo(boolean success,
       String username, String uuid, String errorMessage);
@@ -118,34 +114,6 @@ public class ZgeOuya {
     facade.shutdown();
   }
   
-  // Product info
-  
-  // product info request callback
-  private static final OuyaResponseListener<ArrayList<Product>> productListListener =
-    new CancelIgnoringOuyaResponseListener<ArrayList<Product>>() {
-
-    @Override
-    public void onSuccess(ArrayList<Product> products) {
-      for(Product p : products) {
-        NativeSetProductInfo(true, p.getIdentifier(), p.getName(),
-            p.getLocalPrice() + " " + p.getCurrencyCode(), p.getDescription(), null);
-      }
-    }
-
-    @Override
-    public void onFailure(int errorCode, String errorMessage, Bundle errorBundle) {
-      NativeSetProductInfo(false, null, null, null, null, errorMessage);
-    }
-  };
-
-  public static void requestProducts(String[] productIds) {
-    ArrayList<Purchasable> productList = new ArrayList<Purchasable>();
-    for(String productId: Arrays.asList(productIds))
-      productList.add(new Purchasable(productId));
-    
-    facade.requestProductList(productList, productListListener);
-  }
-
   // Making purchases
 
   private static final Map<String, String> mOutstandingPurchaseRequests = new HashMap<String, String>();

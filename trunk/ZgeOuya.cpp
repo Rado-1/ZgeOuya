@@ -59,12 +59,6 @@ freely, subject to the following restrictions:
 
 // Types
 
-struct ProductInfo{
-	std::string name;
-	std::string price;
-	std::string description;
-};
-
 struct GamerInfo{
 	std::string username;
 	std::string uuid;
@@ -82,7 +76,6 @@ static jclass zgeOuyaCls;
 static jmethodID isOuyaMethod;
 static jmethodID initPurchasingMethod;
 static jmethodID stopPurchasingMethod;
-static jmethodID requestProductsMethod;
 static jmethodID requestPurchaseMethod;
 static jmethodID requestGamerInfoMethod;
 static jmethodID requestReceiptsMethod;
@@ -90,9 +83,6 @@ static jmethodID putGameDataMethod;
 static jmethodID getGameDataMethod;
 
 std::string gErrorMsg;
-
-int gProductRequestResult; // = YES / NO / ERROR
-std::map<std::string,ProductInfo> gProductInfo;
 
 std::map<std::string,Purchase> gPurchases; // <product id, purchase>
 
@@ -132,7 +122,6 @@ JNIEXPORT jint JNI_OnLoad(JavaVM* vm, void* reserved)
 		isOuyaMethod = env->GetStaticMethodID(zgeOuyaCls, "isOuya", "()Z");
 		initPurchasingMethod = env->GetStaticMethodID(zgeOuyaCls, "initPurchasing", "(Ljava/lang/String;)I");
 		stopPurchasingMethod = env->GetStaticMethodID(zgeOuyaCls, "stopPurchasing", "()V");
-		requestProductsMethod = env->GetStaticMethodID(zgeOuyaCls, "requestProducts", "([Ljava/lang/String;)V");
 		requestPurchaseMethod = env->GetStaticMethodID(zgeOuyaCls, "requestPurchase", "(Ljava/lang/String;)V");
 		requestGamerInfoMethod = env->GetStaticMethodID(zgeOuyaCls, "requestGamerInfo", "()V");
 		requestReceiptsMethod = env->GetStaticMethodID(zgeOuyaCls, "requestReceipts", "()V");
@@ -164,68 +153,6 @@ export void ouya_StopPurchasing(){
 	LOG_DEBUG("ouya_StopPurchasing called");
 
 	env->CallStaticVoidMethod(zgeOuyaCls, stopPurchasingMethod);
-}
-
-export void ouya_RequestProducts(char** productIds, int productNum){
-	LOG_DEBUG("ouya_RequestProducts called");
-
-	jobjectArray productIdArray = env->NewObjectArray(productNum, env->FindClass("java/lang/String"),0);
-	jstring id;
-
-	for(int i=0; i < productNum; ++i){
-		id = env->NewStringUTF(productIds[i]);
-		env->SetObjectArrayElement(productIdArray, i, id);
-	}
-
-	env->CallStaticVoidMethod(zgeOuyaCls, requestProductsMethod, productIdArray);
-
-	gProductInfo.clear();
-	gProductRequestResult = NO;
-}
-
-export int ouya_IsProductRequestDone(const char* &errorMessage){
-	LOG_DEBUG("ouya_IsProductRequestDone called");
-
-	if(gProductRequestResult == ERROR) errorMessage = gErrorMsg.c_str();
-	return gProductRequestResult;
-}
-
-export int ouya_GetProductInfo(char* productId, const char* &name, const char* &price, const char* &description){
-	LOG_DEBUG("ouya_GetProductInfo called");
-
-	if(gProductRequestResult == YES){
-
-		name = gProductInfo[productId].name.c_str();
-		price = gProductInfo[productId].price.c_str();
-		description = gProductInfo[productId].description.c_str();
-	}
-	return gProductRequestResult;
-}
-
-export JNIEXPORT void JNICALL
-Java_org_zgameeditor_ZgeOuya_NativeSetProductInfo(JNIEnv *env, jclass cls,
-	jboolean success, jstring productId, jstring name, jstring price,
-	jstring description, jstring errorMessage){
-
-	LOG_DEBUG("NativeSetProductInfo called");
-
-	if((bool)success){
-
-		ProductInfo newProductInfo;
-
-		newProductInfo.name = jstring2string(name);
-		newProductInfo.price = jstring2string(price);
-		newProductInfo.description = jstring2string(description);
-
-		gProductInfo.insert(std::pair<std::string,ProductInfo>
-							(jstring2string(productId), newProductInfo));
-
-		gProductRequestResult = YES;
-	} else {
-
-		gErrorMsg = jstring2string(errorMessage);
-		gProductRequestResult = ERROR;
-	}
 }
 
 export void ouya_RequestPurchase(char* productId){
