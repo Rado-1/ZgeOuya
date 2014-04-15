@@ -1,18 +1,18 @@
 #summary How to use ZgeOuya library in ZGameEditor project
 
+*Important: this page is applicable for the latest version of the library, compatibility to the previous versions is not guaranteed.*
+
 = Usage of OUYA IAP in ZGameEditor project =
 
 Since all IAP functionality includes Internet communication with OUYA backend server, it is realized by asynchronous request-response communication pattern. The common call pattern is used:
- # Include _ZExternalLibrary_ component for !ZgeOuya library to the _!OnLoaded_ section of _ZApplication_.
- # Initialize IAP with {{{ouya_InitPurchasing()}}}. This call is usually placed to the _!OnLoaded_ section of _ZApplication_ or _!OnStart_ section of _!AppState_ component. You must provide your developer UUID and game signing code, both downloaded from the [http://devs.ouya.tv/developers OUYA Developer Portal].
- # In order to request the OUYA server, first, the {{{ouya_Request*()}}} function is called to initialize communication. This call can be placed at any position in your code where appropriate.
- # Then, the {{{ouya_Is*RequestDone()}}} is used to check the availability of the response. If this function returns{{{ouya_YES}}}, the response is available and you can read the result. If the function returns {{{ouya_NO}}} the request is still in progress. If the {{{ouya_ERROR}}} was returned, the request failed and the output {{{errorMsg}}} parameter contains the error message. The {{{ouya_Is*RequestDone()}}} function is usually called in _!OnUpdate_ section of _ZApplication_, _!AppState_, or _!Model_.
- # When the response is available, the results can be read by the {{{ouya_Get*()}}} function.
- # To close the IAP processing, call the {{{ouya_StopPurchasing()}}} function. This call is usually placed to the _!OnClose_ section of _ZApplication_ component, _!OnLeave_ section of _!AppState_, or _!OnRemove_ section of _!Model_ component respectively.
+  # Include _ZExternalLibrary_ component for !ZgeOuya library to the _!OnLoaded_ section of _ZApplication_.
+  # Initialize IAP with {{{ouya_InitPurchasing()}}}. This call is usually placed to the _!OnLoaded_ section of _ZApplication_ or _!OnStart_ section of _!AppState_ component. You must provide your developer UUID downloaded from the [http://devs.ouya.tv/developers OUYA Developer Portal].
+  # In order to request the OUYA server, first, the {{{ouya_Request*()}}} function is called to initialize communication. This call can be placed at any position in your code where appropriate.
+  # Then, the {{{ouya_Is*RequestDone()}}} is used to check the availability of the response. If this function returns{{{ouya_YES}}}, the response is available and you can read the result. If the function returns {{{ouya_NO}}} the request is still in progress. If the {{{ouya_ERROR}}} was returned, the request failed and the output {{{errorMsg}}} parameter contains the error message. The {{{ouya_Is*RequestDone()}}} function is usually called in _!OnUpdate_ section of _ZApplication_, _!AppState_, or _!Model_.
+  # When the response is available, the results can be read by the {{{ouya_Get*()}}} function.
+  # To close the IAP processing, call the {{{ouya_StopPurchasing()}}} function. This call is usually placed to the _!OnClose_ section of _ZApplication_ component, _!OnLeave_ section of _!AppState_, or _!OnRemove_ section of _!Model_ component respectively.
 
-_Note: the previous description uses {{{*}}} as a placeholder for the type of requested object; it can be "Products" for product information, "Purchase" for purchasing a product, "Receipts" for a list of already purchased products, and "!GamerInfo" for information about the current gamer._
-
-The {{{applicationKey}}} parameter of the {{{ouya_InitPurchasing()}}} function represents the ointer to a persistent one-dimensional byte array which contains the key for signing purchases. To obtain its content, open the _!KeyFileToArray.zgeproj_ project (it is placed in the demos file) and put the downloaded game signing key file, key.der, to the same directory. Run the application which fills the content of the APPLICATION_KEY array. Copy the array and paste it to your application.
+_Note: the previous description uses {{{*}}} as a placeholder for the type of requested object; it can be "Purchase" for purchasing a product, "Receipts" for a list of already purchased products, and "!GamerInfo" for information about the current gamer._
 
 *Important: Android package name of your game, as specified on the OUYA Development Portal, must be identical to the ZApplication.!AndroidPackageName property. If not, your game cannot perform purchases.*
 
@@ -20,20 +20,21 @@ Examples of usage !ZgeOuya IAP in ZGE can be found at the [http://googledrive.co
 
 = Usage of OUYA Controller in ZGameEditor project =
 
- # Put the {{{Android gamepad}}} ZLibrary to the _!OnLoaded_ section of _ZApplication_.
- # Wherever it is appropriate, ask for status of the controller buttons with {{{joyGetButton()}}} function and status of the joystick axis with the {{{joyGetAxis()}}} function.
- # To identify OUYA buttons and axes, use the {{{OUYA_*}}} codes defined in the library.
+  # Put the {{{Android gamepad}}} ZLibrary to the _!OnLoaded_ section of _ZApplication_.
+  # Wherever it is appropriate, ask for status of the controller buttons with {{{joyGetButton()}}} function and status of the joystick axis with the {{{joyGetAxis()}}} function.
+  # To identify OUYA buttons and axes, use the {{{OUYA_*}}} codes defined in the library.
 
 = Compiling application for OUYA IAP =
 
- # Set the ZApplication.!AndroidSdk to "4.1 (API Level 16)".
- # Compile your Android application, e.g., use _Project / Android: Build APK (debug)_ menu item.
- # Download the OUYA Development Kit form [https://devs.ouya.tv/developers/odk this link], extract it, and the included `ouya-sdk.jar` file place to the `libs` folder of your application.
- # Place `libZgeOuya.so` file to the `libs/armeabi` folder.
- # Place the `ZgeOuya.java` file to the `src/org/zgameeditor` folder.
- # Compile the APK again as in step 1.
- # Deploy the APK file to your OUYA device and install it. You can use, for instance, USB transfer from PC to OUYA and !FilePwn OUYA application for installing the application at the device.
+  # Set the ZApplication.!AndroidSdk to "4.1 (API Level 16)".
+  # Compile your Android application, e.g., use _Project / Android: Build APK (debug)_ menu item.
+  # Download the OUYA Development Kit form [https://devs.ouya.tv/developers/odk this link], extract it, and the included `ouya-sdk.jar` file place to the `libs` folder of your application.
+  # Place `libZgeOuya.so` file to the `libs/armeabi` folder.
+  # Place the `ZgeOuya.java` file to the `src/org/zgameeditor` folder.
+  # Place the game signing key file `key.der` (obtained from the [http://devs.ouya.tv/developers OUYA Developer Portal]) to the assets` folder.
+  # Compile the APK again as in step 1.
+  # Deploy the APK file to your OUYA device and install it. You can use, for instance, USB transfer from PC to OUYA and !FilePwn OUYA application for installing the application at the device.
 
-_Note 1: Seps from 1 to 5 are required only when the application is built the first time. After that, a single compilation produces the correct APK._
+_Note 1: Seps from 1 to 6 are required only when the application is built the first time. After that, a single compilation produces the correct APK._
 
 _Note 2: Use steps 4 and 5 also in the case when updating to a newer version of the !ZgeOuya library._
