@@ -31,7 +31,7 @@ Examples of usage !ZgeOuya IAP in ZGE can be found at the [http://googledrive.co
   # Download the OUYA Development Kit form [https://devs.ouya.tv/developers/odk this link], extract it, and the included `ouya-sdk.jar` file place to the `libs` folder of your application.
   # Place `libZgeOuya.so` file to the `libs/armeabi` folder.
   # Place the `ZgeOuya.java` file to the `src/org/zgameeditor` folder.
-  # Place the game signing key file `key.der` (obtained from the [http://devs.ouya.tv/developers OUYA Developer Portal]) to the assets` folder.
+  # Place the game signing key file `key.der` (obtained from the [http://devs.ouya.tv/developers OUYA Developer Portal]) to the `assets` folder.
   # Compile the APK again as in step 1.
   # Deploy the APK file to your OUYA device and install it. You can use, for instance, USB transfer from PC to OUYA and !FilePwn OUYA application for installing the application at the device.
 
