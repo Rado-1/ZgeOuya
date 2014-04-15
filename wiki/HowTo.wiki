@@ -5,26 +5,26 @@
 = Usage of OUYA IAP in ZGameEditor project =
 
 Since all IAP functionality includes Internet communication with OUYA backend server, it is realized by asynchronous request-response communication pattern. The common call pattern is used:
-  # Include _ZExternalLibrary_ component for !ZgeOuya library to the _!OnLoaded_ section of _ZApplication_.
-  # Initialize IAP with {{{ouya_InitPurchasing()}}}. This call is usually placed to the _!OnLoaded_ section of _ZApplication_ or _!OnStart_ section of _!AppState_ component. You must provide your developer UUID downloaded from the [http://devs.ouya.tv/developers OUYA Developer Portal].
+  # Include {{{ZExternalLibrary}}} component for !ZgeOuya library to the {{{OnLoaded}}} section of {{{ZApplication}}}. It can be found in the context menu _Add from library... > External libraries > OUYA library_ of the Project tree.
+  # Initialize IAP with {{{ouya_InitPurchasing()}}}. This call is usually placed to the {{{OnLoaded}}} section of {{{ZApplication}}} or {{{OnStart}}} section of {{{AppState}}} component. You must provide your developer UUID downloaded from the [http://devs.ouya.tv/developers OUYA Developer Portal].
   # In order to request the OUYA server, first, the {{{ouya_Request*()}}} function is called to initialize communication. This call can be placed at any position in your code where appropriate.
-  # Then, the {{{ouya_Is*RequestDone()}}} is used to check the availability of the response. If this function returns{{{ouya_YES}}}, the response is available and you can read the result. If the function returns {{{ouya_NO}}} the request is still in progress. If the {{{ouya_ERROR}}} was returned, the request failed and the output {{{errorMsg}}} parameter contains the error message. The {{{ouya_Is*RequestDone()}}} function is usually called in _!OnUpdate_ section of _ZApplication_, _!AppState_, or _!Model_.
+  # Then, the {{{ouya_Is*RequestDone()}}} is used to check the availability of the response. If this function returns{{{ouya_YES}}}, the response is available and you can read the result. If the function returns {{{ouya_NO}}} the request is still in progress. If the {{{ouya_ERROR}}} was returned, the request failed and the output {{{errorMsg}}} parameter contains the error message. The {{{ouya_Is*RequestDone()}}} function is usually called in {{{OnUpdate}}} section of {{{ZApplication}}}, {{{AppState}}}, or {{{Model}}} components.
   # When the response is available, the results can be read by the {{{ouya_Get*()}}} function.
-  # To close the IAP processing, call the {{{ouya_StopPurchasing()}}} function. This call is usually placed to the _!OnClose_ section of _ZApplication_ component, _!OnLeave_ section of _!AppState_, or _!OnRemove_ section of _!Model_ component respectively.
+  # To close the IAP processing, call the {{{ouya_StopPurchasing()}}} function. This call is usually placed to the {{{OnClose}}} section of {{{ZApplication}}}, {{{OnLeave}}} section of {{{AppState}}}, or {{{OnRemove}}} section of the {{{Model}}} component respectively.
 
 _Note: the previous description uses {{{*}}} as a placeholder for the type of requested object; it can be "Purchase" for purchasing a product, "Receipts" for a list of already purchased products, and "!GamerInfo" for information about the current gamer._
 
-*Important: Android package name of your game, as specified on the OUYA Development Portal, must be identical to the ZApplication.!AndroidPackageName property. If not, your game cannot perform purchases.*
+*Important: Android package name of your game, as specified on the OUYA Development Portal, must be identical to the {{{ZApplication.AndroidPackageName}}} property. If not, your game cannot perform purchases.*
 
 Examples of usage !ZgeOuya IAP in ZGE can be found at the [http://googledrive.com/host/0BxwfQ8la88ouc2t2TWJ1NUtCeUk/ download page].
 
 = Usage of OUYA Controller in ZGameEditor project =
 
-  # Put the {{{Android gamepad}}} ZLibrary to the _!OnLoaded_ section of _ZApplication_.
-  # Wherever it is appropriate, ask for status of the controller buttons with {{{joyGetButton()}}} function and status of the joystick axis with the {{{joyGetAxis()}}} function.
+  # Put the {{{Android Gamepad Library}}} ZLibrary to the {{{OnLoaded}}} section of {{{ZApplication}}}. It can be found in the context menu _Add from library... > Libraries > Android Gamepad Library_ of the Project tree.
+  # Ask for status of the controller buttons with {{{joyGetButton()}}} function and status of the joystick axis with the {{{joyGetAxis()}}} functions. These functions are usually called from{{{OnUpdate}}} section of {{{ZApplication}}}, {{{AppState}}}, or {{{Model}}} components.
   # To identify OUYA buttons and axes, use the {{{OUYA_*}}} codes defined in the library.
 
-= Compiling application for OUYA IAP =
+= Building application for OUYA IAP =
 
   # Set the ZApplication.!AndroidSdk to "4.1 (API Level 16)".
   # Compile your Android application, e.g., use _Project / Android: Build APK (debug)_ menu item.
@@ -38,3 +38,7 @@ Examples of usage !ZgeOuya IAP in ZGE can be found at the [http://googledrive.co
 _Note 1: Seps from 1 to 6 are required only when the application is built the first time. After that, a single compilation produces the correct APK._
 
 _Note 2: Use steps 4 and 5 also in the case when updating to a newer version of the !ZgeOuya library._
+
+= Building application for OUYA Controller, without usage IAP =
+
+To build your application just to support OUYA controller, without making use of the IAP mechanism, perform the steps 1, 2, and 8 from the process described in the previous section.
