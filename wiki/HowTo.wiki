@@ -4,6 +4,8 @@
 
 = Usage of OUYA IAP in ZGameEditor project =
 
+*Important: To use the OUYA IAP functionality in your application, you should be an registered OUYA developer and should create game(s) and product(s) to purchase. More information about how to become OUYA developer can be found [http://www.ouya.tv/develop/ here].*
+
 Since all IAP functionality includes Internet communication with OUYA backend server, it is realized by asynchronous request-response communication pattern. The common call pattern is used:
   # Include {{{ZExternalLibrary}}} component for !ZgeOuya library to the {{{OnLoaded}}} section of {{{ZApplication}}}. It can be found in the context menu _Add from library... > External libraries > OUYA library_ of the Project tree.
   # Initialize IAP with {{{ouya_InitPurchasing()}}}. This call is usually placed to the {{{OnLoaded}}} section of {{{ZApplication}}} or {{{OnStart}}} section of {{{AppState}}} component. You must provide your developer UUID downloaded from the [http://devs.ouya.tv/developers OUYA Developer Portal].
@@ -14,7 +16,7 @@ Since all IAP functionality includes Internet communication with OUYA backend se
 
 _Note: the previous description uses {{{*}}} as a placeholder for the type of requested object; it can be "Purchase" for purchasing a product, "Receipts" for a list of already purchased products, and "!GamerInfo" for information about the current gamer._
 
-*Important: Android package name of your game, as specified on the OUYA Development Portal, must be identical to the {{{ZApplication.AndroidPackageName}}} property. If not, your game cannot perform purchases.*
+*Important: Android package name of your game, as specified on the OUYA Development Portal, must be identical to the {{{ZApplication.AndroidPackageName}}} property. If not, your game cannot perform purchases or obtain purchase receipts; the "Invalid game Uuid was provided" error is returned.*
 
 Examples of usage !ZgeOuya IAP in ZGE can be found at the [http://googledrive.com/host/0BxwfQ8la88ouc2t2TWJ1NUtCeUk/ download page].
 
