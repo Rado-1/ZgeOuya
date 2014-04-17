@@ -92,9 +92,9 @@ string ouya_GetGameData(string name) {}]]>
     </ZExternalLibrary>
     <ZLibrary Comment="Globals">
       <Source>
-<![CDATA[const string DEVELOPER_ID = "fbe364f5-8d78-4e0f-952e-7c1047dc0116";
-const string PRODUCT1_ID = "ZGE-TEST-PRODUCT-01";
-const string PRODUCT2_ID = "ZGE-TEST-PRODUCT-02";
+<![CDATA[const string DEVELOPER_ID = "specify-your-UUID-here";
+const string PRODUCT1_ID = "specify-your-product-id-here";
+const string PRODUCT2_ID = "specify-your-product-id-here";
 
 const int TRUE = 1;
 const int FALSE = 0;
