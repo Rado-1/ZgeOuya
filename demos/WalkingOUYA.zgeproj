@@ -1,0 +1,304 @@
+<?xml version="1.0" encoding="iso-8859-1" ?>
+<ZApplication Name="App" Comment="Created by Rado1" Caption="Walking Demo" FrameRateStyle="1" ScreenMode="0" CameraPosition="0 6 0" ViewportRatio="3" ClipFar="2000" NoSound="1" AndroidPackageName="com.rado1.walking" AndroidSdk="1">
+  <OnLoaded>
+    <ZLibrary Comment="Android Gamepad Library">
+      <Source>
+<![CDATA[/*
+  Library of gamepad codes for Android 4.1+ (API 16).
+  Generic Android codes and OUYA-specific codes are included.
+
+  Use the codes in joyGetButton() and joyGetAxis() functions to
+  identify buttons and axes. ZApplication.AndroidSdk property
+  must be set to "4.1 (API Level 16)".
+
+  Copyright (c) 2014 Radovan Cervenka
+*/
+
+// Generic Android button codes
+const int ANDROID_KEYCODE_BUTTON_A = 0;
+const int ANDROID_KEYCODE_BUTTON_X = 1;
+const int ANDROID_KEYCODE_BUTTON_Y = 2;
+const int ANDROID_KEYCODE_BUTTON_B = 3;
+const int ANDROID_KEYCODE_BUTTON_L1 = 4;
+const int ANDROID_KEYCODE_BUTTON_L2 = 5;
+const int ANDROID_KEYCODE_BUTTON_THUMBL = 6;
+const int ANDROID_KEYCODE_BUTTON_R1 = 7;
+const int ANDROID_KEYCODE_BUTTON_R2 = 8;
+const int ANDROID_KEYCODE_BUTTON_THUMBR = 9;
+const int ANDROID_KEYCODE_DPAD_UP = 10;
+const int ANDROID_KEYCODE_DPAD_DOWN = 11;
+const int ANDROID_KEYCODE_DPAD_LEFT = 12;
+const int ANDROID_KEYCODE_DPAD_RIGHT = 13;
+const int ANDROID_KEYCODE_MENU = 14;
+const int ANDROID_KEYCODE_BUTTON_C = 15;
+const int ANDROID_KEYCODE_BUTTON_Z = 16;
+const int ANDROID_KEYCODE_BUTTON_MODE = 17;
+const int ANDROID_KEYCODE_BUTTON_SELECT = 18;
+const int ANDROID_KEYCODE_BUTTON_START = 19;
+const int ANDROID_KEYCODE_BUTTON_1 = 20;
+const int ANDROID_KEYCODE_BUTTON_2 = 21;
+const int ANDROID_KEYCODE_BUTTON_3 = 22;
+const int ANDROID_KEYCODE_BUTTON_4 = 23;
+const int ANDROID_KEYCODE_BUTTON_5 = 24;
+const int ANDROID_KEYCODE_BUTTON_6 = 25;
+const int ANDROID_KEYCODE_BUTTON_7 = 26;
+const int ANDROID_KEYCODE_BUTTON_8 = 27;
+const int ANDROID_KEYCODE_BUTTON_9 = 28;
+const int ANDROID_KEYCODE_BUTTON_10 = 29;
+const int ANDROID_KEYCODE_BUTTON_11 = 30;
+const int ANDROID_KEYCODE_BUTTON_12 = 31;
+
+// OUYA button codes
+const int OUYA_BUTTON_O = 0;
+const int OUYA_BUTTON_U = 1;
+const int OUYA_BUTTON_Y = 2;
+const int OUYA_BUTTON_A = 3;
+const int OUYA_BUTTON_L1 = 4;
+const int OUYA_BUTTON_L2 = 5;
+const int OUYA_BUTTON_LS = 6;
+const int OUYA_BUTTON_R1 = 7;
+const int OUYA_BUTTON_R2 = 8;
+const int OUYA_BUTTON_RS = 9;
+const int OUYA_BUTTON_DPAD_UP = 10;
+const int OUYA_BUTTON_DPAD_DOWN = 11;
+const int OUYA_BUTTON_DPAD_LEFT = 12;
+const int OUYA_BUTTON_DPAD_RIGHT = 13;
+const int OUYA_BUTTON_MENU = 14;
+
+// Generic Android joystick axis codes
+const int ANDROID_AXIS_X = 0;
+const int ANDROID_AXIS_Y = 1;
+const int ANDROID_AXIS_Z = 2;
+const int ANDROID_AXIS_RZ = 3;
+const int ANDROID_AXIS_LTRIGGER = 4;
+const int ANDROID_AXIS_RTRIGGER = 5;
+const int ANDROID_AXIS_RX = 6;
+const int ANDROID_AXIS_RY = 7;
+
+// OUYA joystick axis codes
+const int OUYA_AXIS_LS_X = 0;
+const int OUYA_AXIS_LS_Y = 1;
+const int OUYA_AXIS_RS_X = 2;
+const int OUYA_AXIS_RS_Y = 3;
+const int OUYA_AXIS_L2 = 4;
+const int OUYA_AXIS_R2 = 5;]]>
+      </Source>
+    </ZLibrary>
+    <ZLibrary Comment="Globals">
+      <Source>
+<![CDATA[const float MAX_POSITION = 104.0;
+const float MAX_PLAYER_POSITION = 95.0;
+const float SPEED = 50.0;
+const float PI2 = PI*2;]]>
+      </Source>
+    </ZLibrary>
+    <ZExpression Comment="Init">
+      <Expression>
+<![CDATA[// spawn objects
+for(int i = 0; i < 100; ++i)
+  createModel(BirdModel);
+
+// reset camera
+App.CameraPosition = 0;
+App.CameraPosition.Y = 6;
+App.CameraRotation = 0;
+centerMouse();]]>
+      </Expression>
+    </ZExpression>
+  </OnLoaded>
+  <OnUpdate>
+    <ZExpression Comment="Move and rotate camera">
+      <Expression>
+<![CDATA[// press A to stop
+if(joyGetButton(0, OUYA_BUTTON_A)) quit();
+
+// rotate camera
+App.CameraRotation.Y += joyGetAxis(0, OUYA_AXIS_RS_X)/2 * App.DeltaTime;
+App.CameraRotation.X -= joyGetAxis(0, OUYA_AXIS_RS_Y)/2 * App.DeltaTime;
+App.CameraRotation.X = clamp(App.CameraRotation.X, -0.25, 0.1);
+
+// move camera
+float r = App.CameraRotation.Y * PI2,
+      s = sin(r),
+      c = cos(r),
+      fwd = joyGetAxis(0, OUYA_AXIS_LS_Y),
+      side = joyGetAxis(0, OUYA_AXIS_LS_X);
+
+App.CameraPosition.X -= (s*fwd - c*side) * SPEED * App.DeltaTime;
+App.CameraPosition.Z += (c*fwd + s*side) * SPEED * App.DeltaTime;
+
+// keep me inside
+if(abs(App.CameraPosition.X) > MAX_PLAYER_POSITION)
+  App.CameraPosition.X = App.CameraPosition.X > 0 ? MAX_PLAYER_POSITION : -MAX_PLAYER_POSITION;
+
+if(abs(App.CameraPosition.Z) > MAX_PLAYER_POSITION)
+  App.CameraPosition.Z = App.CameraPosition.Z > 0 ? MAX_PLAYER_POSITION : -MAX_PLAYER_POSITION;]]>
+      </Expression>
+    </ZExpression>
+  </OnUpdate>
+  <OnRender>
+    <UseMaterial Material="GroundMaterial"/>
+    <RenderSetColor Color="0.5765 0.7882 1 1"/>
+    <RenderTransformGroup Scale="200 200 1" Translate="0 100 -100">
+      <Children>
+        <RenderSprite/>
+      </Children>
+    </RenderTransformGroup>
+    <RenderTransformGroup Scale="200 200 1" Translate="0 100 100" Rotate="0.5 0 0">
+      <Children>
+        <RenderSprite/>
+      </Children>
+    </RenderTransformGroup>
+    <RenderTransformGroup Scale="200 200 1" Translate="-100 100 0" Rotate="0 0.25 0">
+      <Children>
+        <RenderSprite/>
+      </Children>
+    </RenderTransformGroup>
+    <RenderTransformGroup Scale="200 200 1" Translate="100 100 0" Rotate="0 -0.25 0">
+      <Children>
+        <RenderSprite/>
+      </Children>
+    </RenderTransformGroup>
+    <RenderTransformGroup Scale="200 200 1" Translate="0 200 0" Rotate="0.25 0 0">
+      <Children>
+        <RenderSprite/>
+      </Children>
+    </RenderTransformGroup>
+    <RenderSetColor Color="0.7569 1 0.7569 1"/>
+    <RenderTransformGroup Scale="200 200 1" Rotate="-0.25 0 0">
+      <Children>
+        <RenderSprite/>
+      </Children>
+    </RenderTransformGroup>
+  </OnRender>
+  <Content>
+    <Group Comment="Artwork">
+      <Children>
+        <Material Name="DefaultMaterial" Light="0"/>
+        <Bitmap Name="GroundBitmap" Width="3" Height="3" Filter="2">
+          <Producers>
+            <BitmapRect Color="0.4353 0.4353 0.4353 1" Size="-1 -1 1 1"/>
+            <BitmapRect Color="1 1 1 1" Size="-0.95 -0.95 0.95 0.95"/>
+          </Producers>
+        </Bitmap>
+        <Material Name="GroundMaterial" WireframeWidth="1" Color="1 1 1 0.5" Light="0">
+          <Textures>
+            <MaterialTexture Texture="GroundBitmap" TextureScale="20 20 1" TextureX="0.5" TextureY="0.5" TextureWrapMode="1" TexCoords="1"/>
+          </Textures>
+        </Material>
+        <Mesh Name="BirdBodyMesh" Comment="Body">
+          <Producers>
+            <MeshImport>
+              <MeshData>
+<![CDATA[78DA254FBB4A0351149CC43C350FA224904A102D24602501AB046B1B21B585A02685DF90DBA54EA3AC606129117F616D140421D8D8D85859C4683031E4C98E733717EED9736667E6CCCD03D8D1AD36CFDD4223E7266F371EAACDEF52A17151DA2F3C9661604898E7CBDF2DF5706A24EB1298CD4FE3C214AB16279D5AE00DC6B8DEB6AD304727672DC0325BF7ACBFEC5A0FA706F39E376ED98139B8CB5EC3D45F613E2AC5B67B6A119827692A87960FB3DE2AB63BC70BCECD95755B38EC5580152C218031D3B067C290EA946B48C3A345B2E8B3C7A9DF8F19C7AABE7D8E98F279732ECB61C021C78C0A8922E657ABEDF18F19FD4DE04BD39C49A1230631D2AEA058334D717946D487B5194253D28FE545B107EC72266E4CF93C9F693D13CA1BF1119BC753028FD62D28BF106C1FC650BA1973DA6D3386A500BA8C21E2CF4329479CC831A3D7CC386047DBE6E243C88F5EFB0F479ABF56]]>
+              </MeshData>
+            </MeshImport>
+            <MeshExpression AutoNormals="0" VertexColors="255">
+              <Expression>
+<![CDATA[this.C.R = this.V.Z + 1;
+this.C.G = this.V.Z/2;
+this.C.B = this.V.Z/-2 - 0.5;
+
+this.N.X = this.V.X * 2;
+this.N.Y = this.V.Y * 2;
+this.N.Z = 0;]]>
+              </Expression>
+            </MeshExpression>
+          </Producers>
+        </Mesh>
+        <Mesh Name="BirdLeftWingMesh" Comment="LeftWing">
+          <Producers>
+            <MeshImport>
+              <MeshData>
+<![CDATA[78DA636560606003E20F2EF3EC5A4F0AEFD3D14ADAFF747AA343EBC9C9763A5A8FECFFFF6768004286FFFFFFD73380400308034519407C46066606901C0303130388F7FF3F13980F13F9F79F910100713D207C]]>
+              </MeshData>
+            </MeshImport>
+            <MeshExpression AutoNormals="0" VertexColors="255">
+              <Expression>
+<![CDATA[this.C.R = this.V.Z + 1;
+this.C.G = this.V.Z/2;
+this.C.B = this.V.Z/-2 - 0.5;
+
+this.N.X = this.V.X * 2;
+this.N.Y = this.V.Y * 2;
+this.N.Z = 0;]]>
+              </Expression>
+            </MeshExpression>
+          </Producers>
+        </Mesh>
+        <Mesh Name="BirdRightWinMesh" Comment="RightWing">
+          <Producers>
+            <MeshImport>
+              <MeshData>
+<![CDATA[78DA63656060600362939AEE03AD2785F7E96825ED07B21D5A4F4EB6D3D17A640F946A6068B8FEF6FFFFFFF5D7DF827840B2E1FF7FA0483D90C7C0CCC0C8C004A481F2FF19C1340390CF08A6413C260600133624B8]]>
+              </MeshData>
+            </MeshImport>
+            <MeshExpression AutoNormals="0" VertexColors="255">
+              <Expression>
+<![CDATA[this.C.R = this.V.Z + 1;
+this.C.G = this.V.Z/2;
+this.C.B = this.V.Z/-2 - 0.5;
+
+this.N.X = this.V.X * 2;
+this.N.Y = this.V.Y * 2;
+this.N.Z = 0;]]>
+              </Expression>
+            </MeshExpression>
+          </Producers>
+        </Mesh>
+      </Children>
+    </Group>
+    <Model Name="BirdModel" Scale="2 2 2">
+      <OnRender>
+        <UseMaterial Material="DefaultMaterial"/>
+        <RenderMesh Mesh="BirdBodyMesh"/>
+        <RenderTransformGroup Name="BirdLeftWing">
+          <Children>
+            <RenderMesh Mesh="BirdLeftWingMesh"/>
+          </Children>
+        </RenderTransformGroup>
+        <RenderTransformGroup Name="BirdRightWing">
+          <Children>
+            <RenderMesh Mesh="BirdRightWinMesh"/>
+          </Children>
+        </RenderTransformGroup>
+      </OnRender>
+      <OnUpdate>
+        <ZExpression>
+          <Expression>
+<![CDATA[// move wings
+float a = sin(App.Time*(1 + CurrentModel.Personality*4))/12 + 0.05;
+BirdLeftWing.Rotate.Z = a;
+BirdRightWing.Rotate.Z = 0 - a;
+
+// check boundaries
+if(abs(CurrentModel.Position.X) > MAX_POSITION)
+  CurrentModel.Position.X = clamp(CurrentModel.Position.X*-1, -MAX_POSITION, MAX_POSITION);
+
+if(abs(CurrentModel.Position.Z) > MAX_POSITION)
+  CurrentModel.Position.Z = clamp(CurrentModel.Position.Z*-1, -MAX_POSITION, MAX_POSITION);]]>
+          </Expression>
+        </ZExpression>
+      </OnUpdate>
+      <OnSpawn>
+        <ZExpression Comment="Init">
+          <Expression>
+<![CDATA[// set initial position
+CurrentModel.Position.X = random(0,90);
+CurrentModel.Position.Y = random(50,40);
+CurrentModel.Position.Z = random(0,90);
+
+// set initial rotation
+float r = rnd();
+CurrentModel.Rotation.Y = r;
+
+// set velocity
+r *= PI2;
+CurrentModel.Velocity.X = sin(r) * 10;
+CurrentModel.Velocity.Z = cos(r) * 10;]]>
+          </Expression>
+        </ZExpression>
+      </OnSpawn>
+    </Model>
+  </Content>
+</ZApplication>
