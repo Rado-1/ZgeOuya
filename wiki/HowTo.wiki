@@ -26,6 +26,8 @@ Examples of usage !ZgeOuya IAP in ZGE can be found at the [http://googledrive.co
   # Ask for status of the controller buttons with {{{joyGetButton()}}} function and status of the joystick axis with the {{{joyGetAxis()}}} functions. These functions are usually called from{{{OnUpdate}}} section of {{{ZApplication}}}, {{{AppState}}}, or {{{Model}}} components.
   # To identify OUYA buttons and axes, use the {{{OUYA_*}}} codes defined in the library.
 
+<wiki:video url="https://www.youtube.com/watch?v=99y2JBYSbD0"/>
+
 = Building application for OUYA IAP =
 
   # Set the ZApplication.!AndroidSdk to "4.1 (API Level 16)".
