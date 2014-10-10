@@ -43,6 +43,6 @@ _Note 1: Seps from 1 to 6 are required only when the application is built the fi
 
 _Note 2: Use steps 4 and 5 also in the case when updating to a newer version of the !ZgeOuya library._
 
-= Building application for OUYA Controller, without usage IAP =
+= Building application for OUYA Controller, without usage of IAP =
 
 To build your application just to support OUYA controller, without making use of the IAP mechanism, perform the steps 1, 2, and 8 from the process described in the previous section.
